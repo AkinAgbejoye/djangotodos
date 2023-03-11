@@ -1,27 +1,70 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Todos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  </head>
-  <body class="bg-light">
-   <div class="div container">
-    <div class="row mt-5">
-      <div class="col-md-8 offset-md-2">
-        <div class="card">
-        <div class="card-header shadow-sm bg-light">
-  <h1 class="display-5 text-info "><i class="fas fa-check-double"></i>Todos</h1>
-        </div>
-
-       <div class="card-body">
-
-       </div>
-        </div>
-    </div>
-   </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-  </body>
-</html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Todos</title>
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+            crossorigin="anonymous"
+        >
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+            integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        >
+        <link rel="stylesheet" href="{% static 'todos/style.css' %}">
+    </head>
+    <body class="bg-light">
+        <div class="div container">
+            <div class="row mt-5">
+                <div class="col-md-8 offset-md-2">
+                    <div class="card">
+                        <div class="card-header shadow-sm bg-light">
+                            <h1 class="display-5 text-info ">
+                                <i class="fas fa-check-double"></i>Todos
+                            </h1>
+                        </div>
+                        <div class="card-body">
+                          
+                          <ul class="list-group">
+                            <li class="list-group-item">
+                              <form action="{% url 'insert_todos_items' %}" method="post" autocomplete="off">
+                                {% csrf_token %}
+                                <div class="input-group mb-3">
+                                  <input type="text" class="form-control" name="content">
+                                  <button class="btn btn-outline-secondary" type="submit" >
+                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                </div>
+                              </form>
+                            </li>
+                             {% for todo in todo_list %}
+                          <li class="list-group-item">
+                            {{ todo.content}}
+                            <form action="{% url 'delete_todos_items' todo.id %}" method="post" class="float-right d-inline">
+                              {% csrf_token %}
+                              <button type="submit" class="btn">
+                                <i class="far fa-trash-alt fa-lg text-danger float-right"></i>
+                              </button>
+                            </form>
+                          </li>
+                          {% empty %}
+                          <li class="list-group-item">
+                            <span class="font-italics">
+                              No Todo Item Found
+                            </span>
+                          </li>
+                             {% endfor %}
+                          </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+        </body>
+    </html>
